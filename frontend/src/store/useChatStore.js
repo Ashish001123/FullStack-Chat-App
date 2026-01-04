@@ -14,9 +14,14 @@ export const useChatStore = create((set, get) => ({
     set({ isUsersLoading: true });
     try {
       const res = await axiosInstance.get("/messages/users");
-      set({ users: res.data });
+      const usersWithUnread = res.data.map((u) => ({
+        ...u,
+        unreadCount: u.unreadCount || 0,
+      }));
+
+      set({ users: usersWithUnread });
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Failed to load users");
     } finally {
       set({ isUsersLoading: false });
     }
@@ -28,41 +33,73 @@ export const useChatStore = create((set, get) => ({
       const res = await axiosInstance.get(`/messages/${userId}`);
       set({ messages: res.data });
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Failed to load messages");
     } finally {
       set({ isMessagesLoading: false });
     }
   },
+
   sendMessage: async (messageData) => {
     const { selectedUser, messages } = get();
     try {
-      const res = await axiosInstance.post(`/messages/send/${selectedUser._id}`, messageData);
+      const res = await axiosInstance.post(
+        `/messages/send/${selectedUser._id}`,
+        messageData
+      );
+
       set({ messages: [...messages, res.data] });
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Failed to send message");
     }
   },
 
   subscribeToMessages: () => {
-    const { selectedUser } = get();
-    if (!selectedUser) return;
-
     const socket = useAuthStore.getState().socket;
+    if (!socket) return;
 
     socket.on("newMessage", (newMessage) => {
-      const isMessageSentFromSelectedUser = newMessage.senderId === selectedUser._id;
-      if (!isMessageSentFromSelectedUser) return;
+      const { selectedUser, messages } = get();
 
-      set({
-        messages: [...get().messages, newMessage],
-      });
+      // If chat is open, append message
+      if (selectedUser && newMessage.senderId === selectedUser._id) {
+        set({ messages: [...messages, newMessage] });
+        return;
+      }
+
+      // Otherwise update sidebar (unread + move to top)
+      get().receiveMessage(newMessage);
     });
   },
 
   unsubscribeFromMessages: () => {
     const socket = useAuthStore.getState().socket;
-    socket.off("newMessage");
+    socket?.off("newMessage");
   },
+
+  receiveMessage: (message) =>
+    set((state) => {
+      const senderId = message.senderId;
+
+      const updatedUsers = state.users.map((u) =>
+        u._id === senderId
+          ? { ...u, unreadCount: (u.unreadCount || 0) + 1 }
+          : u
+      );
+
+      const sender = updatedUsers.find((u) => u._id === senderId);
+      const rest = updatedUsers.filter((u) => u._id !== senderId);
+
+      return {
+        users: sender ? [sender, ...rest] : updatedUsers,
+      };
+    }),
+
+  clearUnread: (userId) =>
+    set((state) => ({
+      users: state.users.map((u) =>
+        u._id === userId ? { ...u, unreadCount: 0 } : u
+      ),
+    })),
 
   setSelectedUser: (selectedUser) => set({ selectedUser }),
 }));
