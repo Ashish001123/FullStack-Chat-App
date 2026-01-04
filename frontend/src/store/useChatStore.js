@@ -100,6 +100,15 @@ export const useChatStore = create((set, get) => ({
         u._id === userId ? { ...u, unreadCount: 0 } : u
       ),
     })),
+  
+  clearChat: (userId) =>
+  set((state) => ({
+    messages: [],
+    users: state.users.map((u) =>
+      u._id === userId ? { ...u, unreadCount: 0 } : u
+    ),
+  })),
+
 
   setSelectedUser: (selectedUser) => set({ selectedUser }),
 }));
