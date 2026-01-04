@@ -11,21 +11,21 @@ export const getUsersForSidebar = async (req, res) => {
     const users = await User.find({
       _id: { $ne: loggedInUserId },
     }).select("-password");
-
     const unreadCounts = await Message.aggregate([
-      {
-        $match: {
-          receiverId: loggedInUserId,
-          isRead: false,
-        },
-      },
-      {
-        $group: {
-          _id: "$senderId",
-          count: { $sum: 1 },
-        },
-      },
-    ]);
+  {
+    $match: {
+      receiverId: loggedInUserId,
+      isRead: false,
+    },
+  },
+  {
+    $group: {
+      _id: "$senderId",
+      count: { $sum: 1 },
+    },
+  },
+]);
+
 
     const unreadMap = {};
     unreadCounts.forEach((u) => {
@@ -44,7 +44,6 @@ export const getUsersForSidebar = async (req, res) => {
   }
 };
 
-
 export const getMessages = async (req, res) => {
   try {
     const { id: userToChatId } = req.params;
@@ -55,14 +54,16 @@ export const getMessages = async (req, res) => {
         { senderId: myId, receiverId: userToChatId },
         { senderId: userToChatId, receiverId: myId },
       ],
-    });
+      deletedFor: { $ne: myId }, 
+    }).sort({ createdAt: 1 });
 
     res.status(200).json(messages);
   } catch (error) {
-    console.log("Error in getMessages controller: ", error.message);
+    console.log("Error in getMessages controller:", error.message);
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 export const sendMessage = async (req, res) => {
   try {
@@ -124,12 +125,17 @@ export const deleteChat = async (req, res) => {
     const myId = req.user._id;
     const { id: otherUserId } = req.params;
 
-    await Message.deleteMany({
-      $or: [
-        { senderId: myId, receiverId: otherUserId },
-        { senderId: otherUserId, receiverId: myId },
-      ],
-    });
+    await Message.updateMany(
+      {
+        $or: [
+          { senderId: myId, receiverId: otherUserId },
+          { senderId: otherUserId, receiverId: myId },
+        ],
+      },
+      {
+        $addToSet: { deletedFor: myId },
+      }
+    );
 
     res.status(200).json({ success: true });
   } catch (error) {

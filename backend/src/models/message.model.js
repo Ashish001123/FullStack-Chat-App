@@ -19,6 +19,10 @@ const messageSchema = new mongoose.Schema(
       type: String,
     },
     isRead: { type: Boolean, default: false },
+    deletedFor: {
+      type: [mongoose.Schema.Types.ObjectId],
+      default: [],
+    },
   },
   { timestamps: true }
 );
