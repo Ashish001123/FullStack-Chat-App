@@ -235,12 +235,12 @@ const Sidebar = () => {
   const { onlineUsers, socket } = useAuthStore();
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
 
-  /* ================= FETCH USERS ================= */
+
   useEffect(() => {
     getUsers();
   }, [getUsers]);
 
-  /* ================= SOCKET LISTENER ================= */
+
   useEffect(() => {
     if (!socket) return;
 
@@ -263,7 +263,6 @@ const Sidebar = () => {
 
   return (
     <aside className="h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200">
-      {/* ================= HEADER ================= */}
       <div className="border-b border-base-300 w-full p-5">
         <div className="flex items-center gap-2">
           <Users className="size-6" />
@@ -286,17 +285,13 @@ const Sidebar = () => {
           </span>
         </div>
       </div>
-
-      {/* ================= USERS LIST ================= */}
       <div className="overflow-y-auto w-full py-3">
         {filteredUsers.map((user) => (
           <button
             key={user._id}
             onClick={async () => {
               setSelectedUser(user);
-              clearUnread(user._id); // instant UI update
-
-              // 🔥 IMPORTANT: persist read state in DB
+              clearUnread(user._id); 
               try {
                 await axiosInstance.put(`/messages/read/${user._id}`);
               } catch (error) {
@@ -313,7 +308,6 @@ const Sidebar = () => {
               }
             `}
           >
-            {/* Avatar */}
             <div className="relative mx-auto lg:mx-0">
               <img
                 src={user.profilePic || "/avatar.png"}
@@ -324,16 +318,12 @@ const Sidebar = () => {
                 <span className="absolute bottom-0 right-0 size-3 bg-green-500 rounded-full ring-2 ring-zinc-900" />
               )}
             </div>
-
-            {/* User Info */}
             <div className="hidden lg:block text-left min-w-0 flex-1">
               <div className="font-medium truncate">{user.fullName}</div>
               <div className="text-sm text-zinc-400">
                 {onlineUsers.includes(user._id) ? "Online" : "Offline"}
               </div>
             </div>
-
-            {/* 🔴 UNREAD BADGE */}
             {user.unreadCount > 0 && (
               <span className="bg-green-500 text-white text-xs px-2 py-0.5 rounded-full">
                 {user.unreadCount > 9 ? "9+" : user.unreadCount}

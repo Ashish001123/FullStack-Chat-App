@@ -59,14 +59,10 @@ export const useChatStore = create((set, get) => ({
 
     socket.on("newMessage", (newMessage) => {
       const { selectedUser, messages } = get();
-
-      // If chat is open, append message
       if (selectedUser && newMessage.senderId === selectedUser._id) {
         set({ messages: [...messages, newMessage] });
         return;
       }
-
-      // Otherwise update sidebar (unread + move to top)
       get().receiveMessage(newMessage);
     });
   },
