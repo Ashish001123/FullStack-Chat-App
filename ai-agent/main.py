@@ -1,41 +1,13 @@
-# from fastapi import FastAPI
-# from pydantic import BaseModel
-# from agent import run_agent
-
-# app = FastAPI()
-
-# class Query(BaseModel):
-#     message: str
-
-# @app.post("/chat")
-# def chat(q: Query):
-#     reply = run_agent(q.message)
-#     return {"reply": reply}
-
-
 from fastapi import FastAPI
 from pydantic import BaseModel
-from openai import OpenAI
-import os
+from agent import run_agent
 
 app = FastAPI()
-
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 class ChatRequest(BaseModel):
     message: str
 
-@app.post("/chat")
-async def chat(req: ChatRequest):
-    try:
-        response = client.chat.completions.create(
-            model="gpt-4.1-mini",
-            messages=[
-                {"role": "system", "content": "You are AI assistant for Chatty chat app."},
-                {"role": "user", "content": req.message}
-            ],
-        )
-        return {"reply": response.choices[0].message.content}
-    except Exception as e:
-        print("AI ERROR:", e)
-        return {"reply": "AI error"}
+@app.post("/api/chat")
+def chat(req: ChatRequest):
+    reply = run_agent(req.message)
+    return {"reply": reply}
