@@ -37,10 +37,10 @@ async def chat(req: ChatRequest):
             ],
         )
 
-        reply = response.choices[0].message.content
+        reply = response.choices[0].message.content if response.choices else "No response"
 
         return {"reply": reply}
 
     except Exception as e:
-        print("AI ERROR:", str(e))
+        print("AI ERROR:", e)
         return {"reply": "AI service error"}
