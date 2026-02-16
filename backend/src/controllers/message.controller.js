@@ -117,8 +117,6 @@ export const sendMessage = async (req, res) => {
 
       return res.status(201).json(aiMessage);
     }
-
-    // ✅ normal user message
     const newMessage = new Message({
       senderId,
       receiverId,
