@@ -1,215 +1,3 @@
-// import { useEffect, useState } from "react";
-// import { useChatStore } from "../store/useChatStore";
-// import { useAuthStore } from "../store/useAuthStore";
-// import SidebarSkeleton from "./skeletons/SidebarSkeleton";
-// import { Users } from "lucide-react";
-
-// const Sidebar = () => {
-//   const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } = useChatStore();
-
-//   const { onlineUsers } = useAuthStore();
-//   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
-
-//   useEffect(() => {
-//     getUsers();
-//   }, [getUsers]);
-
-//   const filteredUsers = showOnlineOnly
-//     ? users.filter((user) => onlineUsers.includes(user._id))
-//     : users;
-
-//   if (isUsersLoading) return <SidebarSkeleton />;
-
-//   return (
-//     <aside className="h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200">
-//       <div className="border-b border-base-300 w-full p-5">
-//         <div className="flex items-center gap-2">
-//           <Users className="size-6" />
-//           <span className="font-medium hidden lg:block">Contacts</span>
-//         </div>
-//         {/* TODO: Online filter toggle */}
-//         <div className="mt-3 hidden lg:flex items-center gap-2">
-//           <label className="cursor-pointer flex items-center gap-2">
-//             <input
-//               type="checkbox"
-//               checked={showOnlineOnly}
-//               onChange={(e) => setShowOnlineOnly(e.target.checked)}
-//               className="checkbox checkbox-sm"
-//             />
-//             <span className="text-sm">Show online only</span>
-//           </label>
-//           <span className="text-xs text-zinc-500">({onlineUsers.length - 1} online)</span>
-//         </div>
-//       </div>
-
-//       <div className="overflow-y-auto w-full py-3">
-//         {filteredUsers.map((user) => (
-//           <button
-//             key={user._id}
-//             onClick={() => setSelectedUser(user)}
-//             className={`
-//               w-full p-3 flex items-center gap-3
-//               hover:bg-base-300 transition-colors
-//               ${selectedUser?._id === user._id ? "bg-base-300 ring-1 ring-base-300" : ""}
-//             `}
-//           >
-//             <div className="relative mx-auto lg:mx-0">
-//               <img
-//                 src={user.profilePic || "/avatar.png"}
-//                 alt={user.name}
-//                 className="size-12 object-cover rounded-full"
-//               />
-//               {onlineUsers.includes(user._id) && (
-//                 <span
-//                   className="absolute bottom-0 right-0 size-3 bg-green-500 
-//                   rounded-full ring-2 ring-zinc-900"
-//                 />
-//               )}
-//             </div>
-
-//             {/* User info - only visible on larger screens */}
-//             <div className="hidden lg:block text-left min-w-0">
-//               <div className="font-medium truncate">{user.fullName}</div>
-//               <div className="text-sm text-zinc-400">
-//                 {onlineUsers.includes(user._id) ? "Online" : "Offline"}
-//               </div>
-//             </div>
-//           </button>
-//         ))}
-
-//         {filteredUsers.length === 0 && (
-//           <div className="text-center text-zinc-500 py-4">No online users</div>
-//         )}
-//       </div>
-//     </aside>
-//   );
-// };
-// export default Sidebar;
-
-
-
-
-
-
-
-
-
-// import { useEffect, useState } from "react";
-// import { Users } from "lucide-react";
-// import SidebarSkeleton from "./skeletons/SidebarSkeleton";
-
-// import { useChatStore } from "../store/useChatStore";
-// import { useAuthStore } from "../store/useAuthStore";
-
-// const Sidebar = () => {
-//   const {
-//     getUsers,
-//     users,
-//     selectedUser,
-//     setSelectedUser,
-//     clearUnread,
-//     isUsersLoading,
-//   } = useChatStore();
-
-//   const { onlineUsers, socket } = useAuthStore();
-//   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
-
-//   useEffect(() => {
-//     getUsers();
-//   }, [getUsers]);
-//   useEffect(() => {
-//     if (!socket) return;
-
-//     socket.on("newMessage", (message) => {
-//       useChatStore.getState().receiveMessage(message);
-//     });
-
-//     return () => socket.off("newMessage");
-//   }, [socket]);
-
-//   const filteredUsers = showOnlineOnly
-//     ? users.filter((user) => onlineUsers.includes(user._id))
-//     : users;
-
-//   if (isUsersLoading) return <SidebarSkeleton />;
-
-//   return (
-//     <aside className="h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200">
-//       <div className="border-b border-base-300 w-full p-5">
-//         <div className="flex items-center gap-2">
-//           <Users className="size-6" />
-//           <span className="font-medium hidden lg:block">Contacts</span>
-//         </div>
-//         <div className="mt-3 hidden lg:flex items-center gap-2">
-//           <label className="cursor-pointer flex items-center gap-2">
-//             <input
-//               type="checkbox"
-//               checked={showOnlineOnly}
-//               onChange={(e) => setShowOnlineOnly(e.target.checked)}
-//               className="checkbox checkbox-sm"
-//             />
-//             <span className="text-sm">Show online only</span>
-//           </label>
-//           <span className="text-xs text-zinc-500">
-//             ({onlineUsers.length - 1} online)
-//           </span>
-//         </div>
-//       </div>
-//       <div className="overflow-y-auto w-full py-3">
-//         {filteredUsers.map((user) => (
-//           <button
-//             key={user._id}
-//             onClick={() => {
-//               setSelectedUser(user);
-//               clearUnread(user._id);
-//             }}
-//             className={`
-//               w-full p-3 flex items-center gap-3
-//               hover:bg-base-300 transition-colors
-//               ${selectedUser?._id === user._id ? "bg-base-300 ring-1 ring-base-300" : ""}
-//             `}
-//           >
-//             <div className="relative mx-auto lg:mx-0">
-//               <img
-//                 src={user.profilePic || "/avatar.png"}
-//                 alt={user.fullName}
-//                 className="size-12 object-cover rounded-full"
-//               />
-//               {onlineUsers.includes(user._id) && (
-//                 <span className="absolute bottom-0 right-0 size-3 bg-green-500 rounded-full ring-2 ring-zinc-900" />
-//               )}
-//             </div>
-
-//             <div className="hidden lg:block text-left min-w-0 flex-1">
-//               <div className="font-medium truncate">{user.fullName}</div>
-//               <div className="text-sm text-zinc-400">
-//                 {onlineUsers.includes(user._id) ? "Online" : "Offline"}
-//               </div>
-//             </div>
-
-//             {user.unreadCount > 0 && (
-//               <span className="bg-green-500 text-white text-xs px-2 py-0.5 rounded-full">
-//                 {user.unreadCount > 9 ? "9+" : user.unreadCount}
-//               </span>
-//             )}
-//           </button>
-//         ))}
-
-//         {filteredUsers.length === 0 && (
-//           <div className="text-center text-zinc-500 py-4">
-//             No online users
-//           </div>
-//         )}
-//       </div>
-//     </aside>
-//   );
-// };
-
-// export default Sidebar;
-
-
-
-
 
 
 
@@ -220,6 +8,12 @@ import SidebarSkeleton from "./skeletons/SidebarSkeleton";
 import { useChatStore } from "../store/useChatStore";
 import { useAuthStore } from "../store/useAuthStore";
 import { axiosInstance } from "../lib/axios";
+
+const AI_USER = {
+  _id: "ai_assistant",
+  fullName: "AI Assistant",
+  profilePic: "/ai.png",
+};
 
 const Sidebar = () => {
   const {
@@ -235,11 +29,9 @@ const Sidebar = () => {
   const { onlineUsers, socket } = useAuthStore();
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
 
-
   useEffect(() => {
     getUsers();
   }, [getUsers]);
-
 
   useEffect(() => {
     if (!socket) return;
@@ -250,9 +42,7 @@ const Sidebar = () => {
 
     socket.on("newMessage", handleNewMessage);
 
-    return () => {
-      socket.off("newMessage", handleNewMessage);
-    };
+    return () => socket.off("newMessage", handleNewMessage);
   }, [socket, receiveMessage]);
 
   const filteredUsers = showOnlineOnly
@@ -262,14 +52,14 @@ const Sidebar = () => {
   if (isUsersLoading) return <SidebarSkeleton />;
 
   return (
-    <aside className="h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200">
+    <aside className="h-full w-20 lg:w-72 border-r border-base-300 flex flex-col">
+      {/* Header */}
       <div className="border-b border-base-300 w-full p-5">
         <div className="flex items-center gap-2">
           <Users className="size-6" />
           <span className="font-medium hidden lg:block">Contacts</span>
         </div>
 
-        {/* Online filter */}
         <div className="mt-3 hidden lg:flex items-center gap-2">
           <label className="cursor-pointer flex items-center gap-2">
             <input
@@ -285,22 +75,51 @@ const Sidebar = () => {
           </span>
         </div>
       </div>
+
+      {/* List */}
       <div className="overflow-y-auto w-full py-3">
+
+        {/* AI Assistant */}
+        <button
+          onClick={() => setSelectedUser(AI_USER)}
+          className={`
+            w-full p-3 flex items-center gap-3
+            hover:bg-base-300
+            ${
+              selectedUser?._id === AI_USER._id
+                ? "bg-base-300 ring-1 ring-base-300"
+                : ""
+            }
+          `}
+        >
+          <div className="relative mx-auto lg:mx-0">
+            <img
+              src="/ai.png"
+              alt="AI Assistant"
+              className="size-12 rounded-full"
+            />
+          </div>
+
+          <div className="hidden lg:block text-left flex-1">
+            <div className="font-medium">AI Assistant</div>
+            <div className="text-sm text-zinc-400">Ask anything</div>
+          </div>
+        </button>
+
+        {/* Users */}
         {filteredUsers.map((user) => (
           <button
             key={user._id}
             onClick={async () => {
               setSelectedUser(user);
-              clearUnread(user._id); 
+              clearUnread(user._id);
               try {
                 await axiosInstance.put(`/messages/read/${user._id}`);
-              } catch (error) {
-                console.error("Failed to mark messages as read");
-              }
+              } catch {}
             }}
             className={`
               w-full p-3 flex items-center gap-3
-              hover:bg-base-300 transition-colors
+              hover:bg-base-300
               ${
                 selectedUser?._id === user._id
                   ? "bg-base-300 ring-1 ring-base-300"
@@ -312,18 +131,20 @@ const Sidebar = () => {
               <img
                 src={user.profilePic || "/avatar.png"}
                 alt={user.fullName}
-                className="size-12 object-cover rounded-full"
+                className="size-12 rounded-full"
               />
               {onlineUsers.includes(user._id) && (
                 <span className="absolute bottom-0 right-0 size-3 bg-green-500 rounded-full ring-2 ring-zinc-900" />
               )}
             </div>
-            <div className="hidden lg:block text-left min-w-0 flex-1">
+
+            <div className="hidden lg:block flex-1 text-left">
               <div className="font-medium truncate">{user.fullName}</div>
               <div className="text-sm text-zinc-400">
                 {onlineUsers.includes(user._id) ? "Online" : "Offline"}
               </div>
             </div>
+
             {user.unreadCount > 0 && (
               <span className="bg-green-500 text-white text-xs px-2 py-0.5 rounded-full">
                 {user.unreadCount > 9 ? "9+" : user.unreadCount}
@@ -331,12 +152,6 @@ const Sidebar = () => {
             )}
           </button>
         ))}
-
-        {filteredUsers.length === 0 && (
-          <div className="text-center text-zinc-500 py-4">
-            No online users
-          </div>
-        )}
       </div>
     </aside>
   );

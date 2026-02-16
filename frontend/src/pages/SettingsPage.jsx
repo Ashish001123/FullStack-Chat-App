@@ -6,10 +6,8 @@ const PREVIEW_MESSAGES = [
   { id: 1, content: "Hey! How's it going?", isSent: false },
   { id: 2, content: "I'm doing great! Just working on some new features.", isSent: true },
 ];
-
 const SettingsPage = () => {
   const { theme, setTheme } = useThemeStore();
-
   return (
     <div className="h-screen container mx-auto px-4 pt-20 max-w-5xl">
       <div className="space-y-6">
@@ -17,7 +15,6 @@ const SettingsPage = () => {
           <h2 className="text-lg font-semibold">Theme</h2>
           <p className="text-sm text-base-content/70">Choose a theme for your chat interface</p>
         </div>
-
         <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2">
           {THEMES.map((t) => (
             <button
@@ -42,7 +39,6 @@ const SettingsPage = () => {
             </button>
           ))}
         </div>
-
         {/* Preview Section */}
         <h3 className="text-lg font-semibold mb-3">Preview</h3>
         <div className="rounded-xl border border-base-300 overflow-hidden bg-base-100 shadow-lg">
@@ -62,7 +58,6 @@ const SettingsPage = () => {
                     </div>
                   </div>
                 </div>
-
                 {/* Chat Messages */}
                 <div className="p-4 space-y-4 min-h-[200px] max-h-[200px] overflow-y-auto bg-base-100">
                   {PREVIEW_MESSAGES.map((message) => (
@@ -89,7 +84,6 @@ const SettingsPage = () => {
                     </div>
                   ))}
                 </div>
-
                 {/* Chat Input */}
                 <div className="p-4 border-t border-base-300 bg-base-100">
                   <div className="flex gap-2">

@@ -25,8 +25,6 @@ export const getUsersForSidebar = async (req, res) => {
     },
   },
 ]);
-
-
     const unreadMap = {};
     unreadCounts.forEach((u) => {
       unreadMap[u._id.toString()] = u.count;
