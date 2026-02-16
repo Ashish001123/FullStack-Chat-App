@@ -13,7 +13,6 @@
 #     return {"reply": reply}
 
 
-
 from fastapi import FastAPI
 from pydantic import BaseModel
 from openai import OpenAI
@@ -36,11 +35,7 @@ async def chat(req: ChatRequest):
                 {"role": "user", "content": req.message}
             ],
         )
-
-        reply = response.choices[0].message.content if response.choices else "No response"
-
-        return {"reply": reply}
-
+        return {"reply": response.choices[0].message.content}
     except Exception as e:
         print("AI ERROR:", e)
-        return {"reply": "AI service error"}
+        return {"reply": "AI error"}
