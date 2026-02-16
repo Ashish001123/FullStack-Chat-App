@@ -96,20 +96,19 @@ export const getMessages = async (req, res) => {
 //     res.status(500).json({ error: "Internal server error" });
 //   }
 // };
-
-
 export const sendMessage = async (req, res) => {
   try {
     const { text, image } = req.body;
     const { id: receiverId } = req.params;
     const senderId = req.user._id;
 
+    // ✅ AI assistant branch
     if (receiverId === "ai_assistant") {
-      const aiReply = "Hello 👋 I'm your AI assistant"; 
+      const aiReply = "Hello 👋 I'm your AI assistant"; // replace with AI API
 
       const aiMessage = new Message({
         senderId: senderId,
-        receiverId: senderId, 
+        receiverId: senderId, // self chat OR null
         text: aiReply,
         isRead: true,
       });
@@ -119,6 +118,7 @@ export const sendMessage = async (req, res) => {
       return res.status(201).json(aiMessage);
     }
 
+    // ✅ normal user message
     const newMessage = new Message({
       senderId,
       receiverId,
