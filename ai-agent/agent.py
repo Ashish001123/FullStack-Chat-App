@@ -45,30 +45,25 @@ from app_knowledge import APP_KNOWLEDGE
 env_path = Path(__file__).parent / ".env"
 load_dotenv(dotenv_path=env_path)
 
-api_key = os.getenv("OPENAI_API_KEY")
+api_key = os.getenv("GROQ_API_KEY")
 
 if not api_key:
     raise ValueError("OPENAI_API_KEY missing")
 
-client = OpenAI(api_key=api_key)
-
+client = OpenAI(
+    api_key=os.environ.get("GROQ_API_KEY"),
+    base_url="https://api.groq.com/openai/v1",
+)
 print("✅ OpenAI key loaded")
 
 def run_agent(question: str):
-    system = f"""
-You are AI assistant for Chatty chat app.
-Answer user questions about the app.
-
-App info:
-{APP_KNOWLEDGE}
-"""
+    system = f"""You are AI assistant for Chatty chat app.Answer user questions about the app.App info:{APP_KNOWLEDGE}"""
 
     resp = client.chat.completions.create(
-        model="gpt-4.1-mini",
+        model="openai/gpt-oss-20b",
         messages=[
             {"role": "system", "content": system},
             {"role": "user", "content": question},
         ],
     )
-
     return resp.choices[0].message.content
