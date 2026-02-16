@@ -4,13 +4,10 @@ from dotenv import load_dotenv
 from openai import OpenAI
 from app_knowledge import APP_KNOWLEDGE
 
-env_path = Path(__file__).parent / ".env"
-load_dotenv(dotenv_path=env_path)
-
 api_key = os.getenv("OPENAI_API_KEY")
 
 if not api_key:
-    raise ValueError("OPENAI_API_KEY not found in .env")
+    raise ValueError("OPENAI_API_KEY missing")
 
 client = OpenAI(api_key=api_key)
 
