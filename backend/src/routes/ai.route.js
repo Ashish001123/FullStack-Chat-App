@@ -10,7 +10,7 @@ router.post("/", async (req, res) => {
     const { message } = req.body;
 
     const aiRes = await axios.post(
-      `${AI_URL}/chat`,
+      `${AI_URL}`,
       { message }
     );
 
