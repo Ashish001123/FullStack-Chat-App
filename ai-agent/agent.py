@@ -55,10 +55,8 @@ client = OpenAI(
     base_url="https://api.groq.com/openai/v1",
 )
 print("✅ OpenAI key loaded")
-
 def run_agent(question: str):
     system = f"""You are AI assistant for Chatty chat app.Answer user questions about the app.App info:{APP_KNOWLEDGE}"""
-
     resp = client.chat.completions.create(
         model="openai/gpt-oss-20b",
         messages=[
