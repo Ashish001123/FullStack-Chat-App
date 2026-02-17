@@ -56,7 +56,7 @@ client = OpenAI(
 )
 print("✅ OpenAI key loaded")
 def run_agent(question: str):
-    system = f"""You are AI assistant for Chatty chat app.Answer user questions about the app.App info:{APP_KNOWLEDGE}"""
+    system = f"""You are AI assistant for Chatty chat app.Answer user questions about the app dont not answer the question that are not related to the app .App info:{APP_KNOWLEDGE}"""
     resp = client.chat.completions.create(
         model="openai/gpt-oss-20b",
         messages=[
