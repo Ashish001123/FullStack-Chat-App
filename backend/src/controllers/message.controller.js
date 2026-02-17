@@ -61,54 +61,17 @@ export const getMessages = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
-
-
-// export const sendMessage = async (req, res) => {
-//   try {
-//     const { text, image } = req.body;
-//     const { id: receiverId } = req.params;
-//     const senderId = req.user._id;
-
-//     let imageUrl;
-//     if (image) {
-//       const uploadResponse = await cloudinary.uploader.upload(image);
-//       imageUrl = uploadResponse.secure_url;
-//     }
-
-//     const newMessage = new Message({
-//       senderId,
-//       receiverId,
-//       text,
-//       image: imageUrl,
-//       isRead: false,
-//     });
-
-//     await newMessage.save();
-
-//     const receiverSocketId = getReceiverSocketId(receiverId);
-//     if (receiverSocketId) {
-//       io.to(receiverSocketId).emit("newMessage", newMessage);
-//     }
-
-//     res.status(201).json(newMessage);
-//   } catch (error) {
-//     console.log("Error in sendMessage controller: ", error.message);
-//     res.status(500).json({ error: "Internal server error" });
-//   }
-// };
 export const sendMessage = async (req, res) => {
   try {
     const { text, image } = req.body;
     const { id: receiverId } = req.params;
     const senderId = req.user._id;
-
-    // ✅ AI assistant branch
     if (receiverId === "ai_assistant") {
-      const aiReply = "Hello 👋 I'm your AI assistant"; // replace with AI API
+      const aiReply = "Hello 👋 I'm your AI assistant"; 
 
       const aiMessage = new Message({
         senderId: senderId,
-        receiverId: senderId, // self chat OR null
+        receiverId: senderId, 
         text: aiReply,
         isRead: true,
       });

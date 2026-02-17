@@ -53,7 +53,6 @@ const Sidebar = () => {
 
   return (
     <aside className="h-full w-20 lg:w-72 border-r border-base-300 flex flex-col">
-      {/* Header */}
       <div className="border-b border-base-300 w-full p-5">
         <div className="flex items-center gap-2">
           <Users className="size-6" />
@@ -75,11 +74,7 @@ const Sidebar = () => {
           </span>
         </div>
       </div>
-
-      {/* List */}
       <div className="overflow-y-auto w-full py-3">
-
-        {/* AI Assistant */}
         <button
           onClick={() => setSelectedUser(AI_USER)}
           className={`
@@ -105,8 +100,6 @@ const Sidebar = () => {
             <div className="text-sm text-zinc-400">Ask anything</div>
           </div>
         </button>
-
-        {/* Users */}
         {filteredUsers.map((user) => (
           <button
             key={user._id}

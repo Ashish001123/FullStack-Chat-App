@@ -42,7 +42,6 @@ signup: async (data) => {
   }
 },
 
-
   login: async (data) => {
     set({ isLoggingIn: true });
     try {
@@ -104,4 +103,3 @@ signup: async (data) => {
     if (get().socket?.connected) get().socket.disconnect();
   },
 }));
-  
