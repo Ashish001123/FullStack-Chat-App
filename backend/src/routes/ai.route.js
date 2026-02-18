@@ -1,7 +1,7 @@
 import express from "express";
 import axios from "axios";
 import Message from "../models/message.model.js";
-
+import User from "../models/user.model.js";
 const router = express.Router();
 
 router.post("/", async (req, res) => {
@@ -41,6 +41,16 @@ await Message.create({
   } catch (e) {
     console.error(e);
     res.status(500).json({ error: "AI failed" });
+  }
+});
+
+router.get("/user", async (req, res) => {
+  try {
+    const users = await User.find().select("-password");
+    res.json(users);
+  } catch (e) {
+    console.error("AI users error", e);
+    res.status(500).json({ error: "failed" });
   }
 });
 

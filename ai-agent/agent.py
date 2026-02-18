@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 from openai import OpenAI
 from app_knowledge import APP_KNOWLEDGE
 
-
 env_path = Path(__file__).parent / ".env"
 load_dotenv(dotenv_path=env_path)
 
@@ -19,8 +18,9 @@ client = OpenAI(api_key=api_key)
 print("✅ OpenAI connected")
 
 def get_users():
-    r = requests.get("http://localhost:5001/api/messages/users")
+    r = requests.get("http://localhost:5001/api/ai/user")
     users = r.json()
+
     return {
         "count": len(users),
         "users": users

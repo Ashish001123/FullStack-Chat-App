@@ -25,7 +25,7 @@ const ChatContainer = () => {
 
   const isAI = selectedUser?._id === "ai_assistant";
 
-  // load normal chat only if not AI
+  
   useEffect(() => {
     if (!selectedUser?._id || isAI) return;
 
@@ -41,6 +41,14 @@ const ChatContainer = () => {
     unsubscribeFromMessages,
   ]);
 
+//   useEffect(() => {
+//   if (!selectedUser?._id || isAI) return;
+
+//   getMessages(selectedUser._id);
+//   subscribeToMessages(selectedUser._id);
+
+//   return () => unsubscribeFromMessages(selectedUser._id);
+// }, [selectedUser._id, isAI, getMessages, subscribeToMessages, unsubscribeFromMessages]);
   // scroll for both
   useEffect(() => {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -109,6 +117,13 @@ const ChatContainer = () => {
                 break-words break-all whitespace-pre-wrap"
                 ref={isLast ? messageEndRef : null}
               >
+                {message.image && (
+                  <img
+                    src={message.image}
+                    alt="sent"
+                    className="max-w-[240px] rounded-lg mb-1"
+                  />
+                )}
                 {message.text && <p>{message.text}</p>}
               </div>
             </div>

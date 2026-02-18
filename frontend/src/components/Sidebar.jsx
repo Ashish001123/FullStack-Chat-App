@@ -108,7 +108,9 @@ const Sidebar = () => {
               clearUnread(user._id);
               try {
                 await axiosInstance.put(`/messages/read/${user._id}`);
-              } catch {}
+              } catch {
+                console.error("Error marking messages as read");
+              }
             }}
             className={`
               w-full p-3 flex items-center gap-3
