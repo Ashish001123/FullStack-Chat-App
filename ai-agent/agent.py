@@ -97,6 +97,6 @@ App knowledge:
 
         return final.choices[0].message.content
 
-    return msg.content
+    return msg.content or "Sorry, I can only help with questions about the Chatty app."
 
 
