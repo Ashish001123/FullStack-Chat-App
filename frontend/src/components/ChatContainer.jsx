@@ -1,5 +1,5 @@
 import { useChatStore } from "../store/useChatStore";
-import useAIStore from "../store/ai.store";
+import { useAIStore } from "../store/ai.store";
 import { useEffect, useRef } from "react";
 
 import ChatHeader from "./ChatHeader";
@@ -69,7 +69,7 @@ const ChatContainer = () => {
   const chatMessages = isAI
     ? aiMessages.map((m, i) => ({
         _id: i,
-        text: m.text,
+        text: m.content,
         senderId: m.role === "user" ? authUser._id : "ai",
         createdAt: new Date(),
       }))

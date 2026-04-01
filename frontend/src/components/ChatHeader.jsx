@@ -78,7 +78,7 @@ import { X, Trash2 } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 import { useChatStore } from "../store/useChatStore";
 import { axiosInstance } from "../lib/axios";
-import useAIStore from "../store/ai.store";
+import { useAIStore } from "../store/ai.store";
 
 const ChatHeader = () => {
   const { selectedUser, setSelectedUser, clearChat } = useChatStore();
