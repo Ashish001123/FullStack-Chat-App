@@ -24,7 +24,12 @@ router.post("/", async (req, res) => {
       content: m.text,
     }));
     messages.push({ role: "user", content: message });
-    const aiRes = await axios.post(process.env.AI_URL, {
+    const AI_URL =
+      process.env.NODE_ENV === "production"
+        ? process.env.AI_URL_PROD
+        : process.env.AI_URL;
+
+    const aiRes = await axios.post(AI_URL, {
       messages,
       userId: userId,
     });
@@ -66,7 +71,6 @@ router.get("/online", async (req, res) => {
     res.status(500).json({ error: "failed" });
   }
 });
-
 
 router.post("/send", async (req, res) => {
   try {

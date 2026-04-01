@@ -49,7 +49,10 @@ app=FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # ✅ correct
+    allow_origins=[
+    "http://localhost:5173",
+    "https://fullstack-chat-app-32t0.onrender.com"
+],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

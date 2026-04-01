@@ -19,12 +19,13 @@ const __dirname = path.resolve();
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
 app.use(cookieParser());
-app.use(
-  cors({
-    origin: "http://localhost:5173",
-    credentials: true,
-  })
-);
+cors({
+  origin: [
+    "http://localhost:5173",
+    "https://fullstack-chat-app-32t0.onrender.com"
+  ],
+  credentials: true,
+})
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
