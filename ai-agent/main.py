@@ -1,49 +1,11 @@
-# from fastapi import FastAPI
-# from pydantic import BaseModel
-# from dotenv import load_dotenv
-# from pathlib import Path
-# import os
-# from openai import OpenAI
-# from agent import run_agent
-
-# env_path = Path(__file__).parent / ".env"
-# load_dotenv(dotenv_path=env_path)
-
-# api_key = os.getenv("OPENAI_API_KEY")
-
-# if not api_key:
-#     raise ValueError("❌ OPENAI_API_KEY missing in .env")
-
-# client = OpenAI(api_key=api_key)
-
-# print("✅ OpenAI loaded")
-
-# app = FastAPI()
-
-# class ChatRequest(BaseModel):
-#     messages: list
-#     userId: str
-
-# @app.post("/api/chat")
-# def chat(req: ChatRequest):
-#     user_msg = req.messages[-1]["content"]
-
-#     reply = run_agent(user_msg, req.userId)
-
-#     return {"reply": reply}
-
-
-
 from pydantic import BaseModel
 from fastapi import FastAPI
 from openai import OpenAI
 from dotenv import load_dotenv
 from agent import run_agent
-from fastapi.middleware.cors import CORSMiddleware
-
+from fastapi.middleware.cors import CORSMiddleware 
 
 load_dotenv()
-
 client = OpenAI()
 app=FastAPI()
 
@@ -59,10 +21,9 @@ app.add_middleware(
 )
 class Query(BaseModel):
     message : str
-
+    userId : str
 
 @app.get("/")
-
 def home():
     return {"api is running"}
 
@@ -75,12 +36,15 @@ def chat(query: Query):
     try:
         response = run_agent(
             user_query=query.message,
+            user_id=query.userId  
         )
         return {
             "result": response 
         }
     except Exception as e:
         print("ERROR:", e) 
+        import traceback
+        traceback.print_exc()
         return {"error": str(e)}
         
 

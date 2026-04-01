@@ -5,11 +5,15 @@ import User from "../models/user.model.js";
 const router = express.Router();
 import mongoose from "mongoose";
 import { sendMessage as mainSendMessage } from "../controllers/message.controller.js";
+import { protectRoute } from "../middleware/auth.middleware.js"
 
-router.post("/", async (req, res) => {
+router.post("/", protectRoute, async (req, res) => {
   try {
-    const { text, userId } = req.body;
+    const { text } = req.body;
+    const userId = req.user._id.toString(); 
+
     const message = text;
+
     const history = await Message.find({
       $or: [
         { senderId: userId, receiverId: "ai_assistant" },
@@ -19,33 +23,41 @@ router.post("/", async (req, res) => {
       .sort({ createdAt: -1 })
       .limit(20)
       .lean();
+
     const messages = history.reverse().map((m) => ({
       role: m.senderId === "ai_assistant" ? "assistant" : "user",
       content: m.text,
     }));
+
     messages.push({ role: "user", content: message });
+
     const AI_URL =
       process.env.NODE_ENV === "production"
         ? process.env.AI_URL_PROD
         : process.env.AI_URL;
 
     const aiRes = await axios.post(AI_URL, {
-      messages,
-      userId: userId,
+      message : message,
+      userId: userId, 
     });
+    console.log("✅ AI RESPONSE:", aiRes.data);
 
-    const reply = aiRes.data.reply;
+    const reply = aiRes.data.result;
+
     await Message.create({
       senderId: userId,
       receiverId: "ai_assistant",
       text: message,
     });
+
     await Message.create({
       senderId: "ai_assistant",
       receiverId: userId,
       text: reply,
     });
+
     res.json({ reply });
+
   } catch (e) {
     console.error(e);
     res.status(500).json({ error: "AI failed" });
