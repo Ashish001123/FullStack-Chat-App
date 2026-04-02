@@ -6,7 +6,7 @@ from agent import run_agent
 from fastapi.middleware.cors import CORSMiddleware 
 
 load_dotenv()
-client = OpenAI()
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 app=FastAPI()
 
 app.add_middleware(
